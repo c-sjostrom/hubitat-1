@@ -17,6 +17,10 @@ metadata {
         capability "PushableButton"
         capability "Indicator"
 
+        command "setConfigParameter",  [[name: "parameterNumber*",type:"NUMBER", description: "Provide the parameter number to edit"], 
+                                        [name: "scaledConfigurationValue*", type:"NUMBER", description: "Enter the value you would like to set the parameter to"], 
+                                        [name: "Size*", type:"ENUM", constraints: ["1", "2", "4"]]]
+
         fingerprint mfr:"027A", prod:"B112", deviceId:"1F1C", inClusters:"0x5E,0x26,0x85,0x8E,0x59,0x55,0x86,0x72,0x5A,0x73,0x70,0x5B,0x9F,0x6C,0x7A", deviceJoinName: "Zooz Zen22 Dimmer" //US
 
     }
@@ -117,6 +121,10 @@ void indicatorWhenOff() {
 
 void indicatorWhenOn() {
     sendToDevice(configCmd(2,1,1))
+}
+
+def setConfigParameter(parameterNumber, size, scaledConfigurationValue) {
+    return configCmd(parameterNumber, size, scaledConfigurationValue)
 }
 
 void zwaveEvent(hubitat.zwave.commands.configurationv1.ConfigurationReport cmd) {
